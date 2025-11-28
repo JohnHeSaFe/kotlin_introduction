@@ -40,6 +40,10 @@ enum class Screen {
     HOME, LOGIN, REGISTER, FORGOT_PASSWORD
 }
 
+
+
+
+
 @Preview(showBackground = true)
 @Composable
 fun MainScreen() {

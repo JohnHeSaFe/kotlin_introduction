@@ -10,13 +10,13 @@
 
     <color name="primary">#1A3D63</color>
     <color name="secondary">#356189</color>
-    <color name="tertiary">#546E7A</color>
+    <color name="tertiary">#7EB4C8</color>
     <color name="background">#84ADD0</color>
     <color name="light">#F6FAFD</color>
 
     <color name="primary_night">#F6FAFD</color>
     <color name="secondary_night">#3E6B94</color>
-    <color name="tertiary_night">#B0BEC5</color>
+    <color name="tertiary_night">#BDD9F6</color>
     <color name="background_night">#0A1931</color>
 
 

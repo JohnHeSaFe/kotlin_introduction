@@ -189,8 +189,8 @@ fun MainScreen() {
             )
             Boton(
                 text = textSearch,
-                bgColor = currentPrimaryColor,
-                textColor = currentSecondaryColor,
+                bgColor = currentSecondaryColor,
+                textColor = currentPrimaryColor,
                 onClick = {}
             )
             Boton(

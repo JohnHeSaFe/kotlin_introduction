@@ -35,12 +35,63 @@ import androidx.compose.ui.unit.sp
 import com.example.intro_proyecto_dam2.R
 import androidx.compose.ui.res.stringResource
 
+// Enum para manejar las pantallas de navegación
+enum class Screen {
+    HOME, LOGIN, REGISTER, FORGOT_PASSWORD
+}
+
 @Preview(showBackground = true)
 @Composable
 fun MainScreen() {
     var isDarkMode by remember { mutableStateOf(false) }
     var isSpanish by remember { mutableStateOf(true) }
+    var currentScreen by remember { mutableStateOf(Screen.HOME) }
 
+    when (currentScreen) {
+        Screen.HOME -> HomeScreen(
+            isDarkMode = isDarkMode,
+            isSpanish = isSpanish,
+            onDarkModeChange = { isDarkMode = it },
+            onLanguageChange = { isSpanish = it },
+            onNavigateToLogin = { currentScreen = Screen.LOGIN },
+            onNavigateToRegister = { currentScreen = Screen.REGISTER }
+        )
+        Screen.LOGIN -> LoginScreen(
+            isDarkMode = isDarkMode,
+            isSpanish = isSpanish,
+            onDarkModeChange = { isDarkMode = it },
+            onLanguageChange = { isSpanish = it },
+            onNavigateToRegister = { currentScreen = Screen.REGISTER },
+            onNavigateToForgotPassword = { currentScreen = Screen.FORGOT_PASSWORD },
+            onNavigateBack = { currentScreen = Screen.HOME }
+        )
+        Screen.REGISTER -> RegisterScreen(
+            isDarkMode = isDarkMode,
+            isSpanish = isSpanish,
+            onDarkModeChange = { isDarkMode = it },
+            onLanguageChange = { isSpanish = it },
+            onNavigateToLogin = { currentScreen = Screen.LOGIN },
+            onNavigateBack = { currentScreen = Screen.HOME }
+        )
+        Screen.FORGOT_PASSWORD -> ForgotPasswordScreen(
+            isDarkMode = isDarkMode,
+            isSpanish = isSpanish,
+            onDarkModeChange = { isDarkMode = it },
+            onLanguageChange = { isSpanish = it },
+            onNavigateBack = { currentScreen = Screen.LOGIN }
+        )
+    }
+}
+
+@Composable
+fun HomeScreen(
+    isDarkMode: Boolean,
+    isSpanish: Boolean,
+    onDarkModeChange: (Boolean) -> Unit,
+    onLanguageChange: (Boolean) -> Unit,
+    onNavigateToLogin: () -> Unit,
+    onNavigateToRegister: () -> Unit
+) {
     var menuExpanded by remember { mutableStateOf(false) }
 
     val currentBackgroundColor = colorResource(
@@ -107,7 +158,7 @@ fun MainScreen() {
                     DropdownMenuItem(
                         text = { Text(text = textLangOption) },
                         onClick = {
-                            isSpanish = !isSpanish
+                            onLanguageChange(!isSpanish)
                             menuExpanded = false
                         },
                         leadingIcon = {
@@ -123,7 +174,7 @@ fun MainScreen() {
                     DropdownMenuItem(
                         text = { Text(text = textThemeOption) },
                         onClick = {
-                            isDarkMode = !isDarkMode
+                            onDarkModeChange(!isDarkMode)
                             menuExpanded = false
                         },
                         leadingIcon = {
@@ -179,13 +230,13 @@ fun MainScreen() {
                 text = textLogin,
                 bgColor = currentPrimaryColor,
                 textColor = currentSecondaryColor,
-                onClick = {}
+                onClick = onNavigateToLogin
             )
             Boton(
                 text = textRegister,
                 bgColor = currentPrimaryColor,
                 textColor = currentSecondaryColor,
-                onClick = {}
+                onClick = onNavigateToRegister
             )
             Boton(
                 text = textSearch,

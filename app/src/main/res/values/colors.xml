@@ -8,9 +8,16 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="nurse_text_dark">#0A1931</color>
-    <color name="nurse_text_secondary">#356189</color>
-    <color name="nurse_primary">#1A3D63</color>
-    <color name="nurse_surface_blue">#84ADD0</color>
-    <color name="nurse_background_light">#F6FAFD</color>
+    <color name="primary">#1A3D63</color>
+    <color name="secondary">#356189</color>
+    <color name="tertiary">#546E7A</color>
+    <color name="background">#84ADD0</color>
+    <color name="light">#F6FAFD</color>
+
+    <color name="primary_night">#F6FAFD</color>
+    <color name="secondary_night">#3E6B94</color>
+    <color name="tertiary_night">#B0BEC5</color>
+    <color name="background_night">#0A1931</color>
+
+
 </resources>

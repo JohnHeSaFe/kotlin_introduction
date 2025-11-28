@@ -1,3 +1,97 @@
 <resources>
-    <string name="app_name">Intro_proyecto_DAM2</string>
+    <string name="app_name">NurseApp</string>
+
+    <string name="subtitle_es">Gestión de guardia inteligente</string>
+    <string name="btn_login_es">Iniciar Sesión</string>
+    <string name="btn_register_es">Registrarse</string>
+    <string name="btn_search_es">Buscar Enfermero</string>
+    <string name="btn_info_es">Información Enfermeros</string>
+
+    <string name="menu_lang_to_en">Cambiar a Inglés</string>
+    <string name="menu_theme_light_es">Cambiar a Modo Claro</string>
+    <string name="menu_theme_dark_es">Cambiar a Modo Oscuro</string>
+
+    <string name="subtitle_en">Smart Shift Management</string>
+    <string name="btn_login_en">Login</string>
+    <string name="btn_register_en">Register</string>
+    <string name="btn_search_en">Search Nurse</string>
+    <string name="btn_info_en">Nurse Info</string>
+
+    <string name="menu_lang_to_es">Switch to Spanish</string>
+    <string name="menu_theme_light_en">Switch to Light Mode</string>
+    <string name="menu_theme_dark_en">Switch to Dark Mode</string>
+
+    <!-- Login Screen - Spanish -->
+    <string name="login_title_es">Iniciar Sesión</string>
+    <string name="login_email_es">Correo Electrónico</string>
+    <string name="login_password_es">Contraseña</string>
+    <string name="login_forgot_password_es">¿Olvidaste tu contraseña?</string>
+    <string name="login_submit_es">Entrar</string>
+    <string name="login_no_account_es">¿No tienes cuenta?</string>
+    <string name="login_register_link_es">Regístrate aquí</string>
+    <string name="login_back_es">Volver</string>
+    <string name="login_error_empty_es">Por favor, completa todos los campos</string>
+    <string name="login_error_invalid_es">Credenciales inválidas</string>
+
+    <!-- Login Screen - English -->
+    <string name="login_title_en">Login</string>
+    <string name="login_email_en">Email</string>
+    <string name="login_password_en">Password</string>
+    <string name="login_forgot_password_en">Forgot your password?</string>
+    <string name="login_submit_en">Sign In</string>
+    <string name="login_no_account_en">Don\'t have an account?</string>
+    <string name="login_register_link_en">Register here</string>
+    <string name="login_back_en">Back</string>
+    <string name="login_error_empty_en">Please fill in all fields</string>
+    <string name="login_error_invalid_en">Invalid credentials</string>
+
+    <!-- Register Screen - Spanish -->
+    <string name="register_title_es">Crear Cuenta</string>
+    <string name="register_name_es">Nombre Completo</string>
+    <string name="register_email_es">Correo Electrónico</string>
+    <string name="register_password_es">Contraseña</string>
+    <string name="register_confirm_password_es">Confirmar Contraseña</string>
+    <string name="register_nurse_id_es">Número de Colegiado</string>
+    <string name="register_submit_es">Registrarse</string>
+    <string name="register_has_account_es">¿Ya tienes cuenta?</string>
+    <string name="register_login_link_es">Inicia sesión</string>
+    <string name="register_back_es">Volver</string>
+    <string name="register_error_empty_es">Por favor, completa todos los campos</string>
+    <string name="register_error_password_es">Las contraseñas no coinciden</string>
+    <string name="register_success_es">Registro exitoso</string>
+
+    <!-- Register Screen - English -->
+    <string name="register_title_en">Create Account</string>
+    <string name="register_name_en">Full Name</string>
+    <string name="register_email_en">Email</string>
+    <string name="register_password_en">Password</string>
+    <string name="register_confirm_password_en">Confirm Password</string>
+    <string name="register_nurse_id_en">Nurse License Number</string>
+    <string name="register_submit_en">Register</string>
+    <string name="register_has_account_en">Already have an account?</string>
+    <string name="register_login_link_en">Sign in</string>
+    <string name="register_back_en">Back</string>
+    <string name="register_error_empty_en">Please fill in all fields</string>
+    <string name="register_error_password_en">Passwords do not match</string>
+    <string name="register_success_en">Registration successful</string>
+
+    <!-- Forgot Password Screen - Spanish -->
+    <string name="forgot_title_es">Recuperar Contraseña</string>
+    <string name="forgot_subtitle_es">Introduce tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña</string>
+    <string name="forgot_email_es">Correo Electrónico</string>
+    <string name="forgot_submit_es">Enviar Enlace</string>
+    <string name="forgot_back_es">Volver al inicio de sesión</string>
+    <string name="forgot_error_empty_es">Por favor, introduce tu correo</string>
+    <string name="forgot_error_invalid_es">Correo electrónico inválido</string>
+    <string name="forgot_success_es">Se ha enviado un enlace a tu correo</string>
+
+    <!-- Forgot Password Screen - English -->
+    <string name="forgot_title_en">Reset Password</string>
+    <string name="forgot_subtitle_en">Enter your email and we will send you a link to reset your password</string>
+    <string name="forgot_email_en">Email</string>
+    <string name="forgot_submit_en">Send Link</string>
+    <string name="forgot_back_en">Back to login</string>
+    <string name="forgot_error_empty_en">Please enter your email</string>
+    <string name="forgot_error_invalid_en">Invalid email address</string>
+    <string name="forgot_success_en">A link has been sent to your email</string>
 </resources>

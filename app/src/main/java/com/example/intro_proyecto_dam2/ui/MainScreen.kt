@@ -1,6 +1,5 @@
 package com.example.intro_proyecto_dam2.ui
 
-import android.widget.Button
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,9 +27,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+
+
+
+
 @Preview(showBackground = true)
 @Composable
-fun MainScreen() {
+fun MainScreenPreview() {
+    MainScreen(onNavToSearch = {})
+}
+
+
+@Composable
+fun MainScreen(onNavToSearch: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -76,7 +85,7 @@ fun MainScreen() {
         ) {
             BotonPrincipal(text = "Iniciar Sesión", onClick = {})
             BotonPrincipal(text = "Registrarse", onClick = {})
-            BotonPrincipal(text = "Buscar Enfermero", onClick = {})
+            BotonPrincipal(text = "Buscar Enfermero", onClick = { onNavToSearch() })
             BotonSecundario(text = "Información Enfermeros", onClick = {})
         }
     }

@@ -13,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.intro_proyecto_dam2.ui.MainScreen
 import com.example.intro_proyecto_dam2.ui.theme.Intro_proyecto_DAM2Theme
 
 class MainActivity : ComponentActivity() {

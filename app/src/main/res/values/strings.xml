@@ -5,7 +5,7 @@
     <string name="btn_login_es">Iniciar Sesión</string>
     <string name="btn_register_es">Registrarse</string>
     <string name="btn_search_es">Buscar Enfermero</string>
-    <string name="btn_info_es">Información Enfermeros</string>
+    <string name="btn_showall_es">Mostrar todos los enfermeros</string>
 
     <string name="menu_lang_to_en">Cambiar a Inglés</string>
     <string name="menu_theme_light_es">Cambiar a Modo Claro</string>
@@ -15,7 +15,7 @@
     <string name="btn_login_en">Login</string>
     <string name="btn_register_en">Register</string>
     <string name="btn_search_en">Search Nurse</string>
-    <string name="btn_info_en">Nurse Info</string>
+    <string name="btn_showall_en">Show all nurses</string>
 
     <string name="menu_lang_to_es">Switch to Spanish</string>
     <string name="menu_theme_light_en">Switch to Light Mode</string>

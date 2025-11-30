@@ -2,90 +2,23 @@ package com.example.intro_proyecto_dam2.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.intro_proyecto_dam2.R
-import androidx.compose.ui.res.stringResource
-
-// Enum para manejar las pantallas de navegación
-enum class Screen {
-    HOME, LOGIN, REGISTER, FORGOT_PASSWORD
-}
 
 
-
-
-
-@Preview(showBackground = true)
-@Composable
-fun MainScreen() {
-    var isDarkMode by remember { mutableStateOf(false) }
-    var isSpanish by remember { mutableStateOf(true) }
-    var currentScreen by remember { mutableStateOf(Screen.HOME) }
-
-    when (currentScreen) {
-        Screen.HOME -> HomeScreen(
-            isDarkMode = isDarkMode,
-            isSpanish = isSpanish,
-            onDarkModeChange = { isDarkMode = it },
-            onLanguageChange = { isSpanish = it },
-            onNavigateToLogin = { currentScreen = Screen.LOGIN },
-            onNavigateToRegister = { currentScreen = Screen.REGISTER }
-        )
-        Screen.LOGIN -> LoginScreen(
-            isDarkMode = isDarkMode,
-            isSpanish = isSpanish,
-            onDarkModeChange = { isDarkMode = it },
-            onLanguageChange = { isSpanish = it },
-            onNavigateToRegister = { currentScreen = Screen.REGISTER },
-            onNavigateToForgotPassword = { currentScreen = Screen.FORGOT_PASSWORD },
-            onNavigateBack = { currentScreen = Screen.HOME }
-        )
-        Screen.REGISTER -> RegisterScreen(
-            isDarkMode = isDarkMode,
-            isSpanish = isSpanish,
-            onDarkModeChange = { isDarkMode = it },
-            onLanguageChange = { isSpanish = it },
-            onNavigateToLogin = { currentScreen = Screen.LOGIN },
-            onNavigateBack = { currentScreen = Screen.HOME }
-        )
-        Screen.FORGOT_PASSWORD -> ForgotPasswordScreen(
-            isDarkMode = isDarkMode,
-            isSpanish = isSpanish,
-            onDarkModeChange = { isDarkMode = it },
-            onLanguageChange = { isSpanish = it },
-            onNavigateBack = { currentScreen = Screen.LOGIN }
-        )
-    }
-}
 
 @Composable
 fun HomeScreen(
@@ -94,7 +27,8 @@ fun HomeScreen(
     onDarkModeChange: (Boolean) -> Unit,
     onLanguageChange: (Boolean) -> Unit,
     onNavigateToLogin: () -> Unit,
-    onNavigateToRegister: () -> Unit
+    onNavigateToRegister: () -> Unit,
+    onNavigateToSearch: () -> Unit
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
 
@@ -118,7 +52,7 @@ fun HomeScreen(
     val textLogin = stringResource(if (isSpanish) R.string.btn_login_es else R.string.btn_login_en)
     val textRegister = stringResource(if (isSpanish) R.string.btn_register_es else R.string.btn_register_en)
     val textSearch = stringResource(if (isSpanish) R.string.btn_search_es else R.string.btn_search_en)
-    val textInfo = stringResource(if (isSpanish) R.string.btn_info_es else R.string.btn_info_en)
+    val textShowAll = stringResource(if (isSpanish) R.string.btn_showall_es else R.string.btn_showall_en)
     val textLangOption = stringResource(if (isSpanish) R.string.menu_lang_to_en else R.string.menu_lang_to_es)
     val textThemeOption = stringResource(
         if (isSpanish) {
@@ -246,10 +180,10 @@ fun HomeScreen(
                 text = textSearch,
                 bgColor = currentSecondaryColor,
                 textColor = currentPrimaryColor,
-                onClick = {}
+                onClick = onNavigateToSearch
             )
             Boton(
-                text = textInfo,
+                text = textShowAll,
                 bgColor = currentSecondaryColor,
                 textColor = currentPrimaryColor,
                 onClick = {}
@@ -257,6 +191,22 @@ fun HomeScreen(
         }
     }
 }
+
+
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenPreview() {
+    HomeScreen(
+        isDarkMode = false,
+        isSpanish = true,
+        onDarkModeChange = {},
+        onLanguageChange = {},
+        onNavigateToLogin = {},
+        onNavigateToRegister = {},
+        onNavigateToSearch = {}
+    )
+}
+
 
 @Composable
 fun Boton(text: String, bgColor: androidx.compose.ui.graphics.Color, textColor: androidx.compose.ui.graphics.Color, onClick: () -> Unit) {

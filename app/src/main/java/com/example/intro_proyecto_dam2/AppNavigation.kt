@@ -13,10 +13,9 @@ import androidx.navigation.navArgument
 import com.example.intro_proyecto_dam2.ui.ForgotPasswordScreen
 import com.example.intro_proyecto_dam2.ui.HomeScreen
 import com.example.intro_proyecto_dam2.ui.LoginScreen
+import com.example.intro_proyecto_dam2.ui.NurseDetailScreen
 import com.example.intro_proyecto_dam2.ui.RegisterScreen
 import com.example.intro_proyecto_dam2.ui.ShowAllNurses
-
-// Asegúrate de tener los imports de tus otras pantallas
 
 @Composable
 fun AppNavigation() {
@@ -38,7 +37,8 @@ fun AppNavigation() {
                 onLanguageChange = { isSpanish = it },
                 onNavigateToLogin = { navController.navigate("login") },
                 onNavigateToRegister = { navController.navigate("register") },
-                onNavigateToSearch = { navController.navigate("buscador_enfermeros") }
+                onNavigateToSearch = { navController.navigate("search_nurse") },
+                onNavigateToShowall = {navController.navigate("show_all_nurses")}
             )
         }
 
@@ -79,15 +79,30 @@ fun AppNavigation() {
 
 
         composable("search_nurse") {
-            SearchNurse(
-                onNurseClick = { nurseId ->
+            SearchNurse(isDarkMode = isDarkMode,
+                isSpanish = isSpanish,
+                onDarkModeChange = { isDarkMode = it },
+                onLanguageChange = { isSpanish = it },
+                onNavigateBack = { navController.popBackStack()},
+                onNurseClick = {
+
+                    nurseId ->
                     navController.navigate("nurse_details/$nurseId")
                 }
             )
         }
 
         composable("show_all_nurses") {
-            ShowAllNurses()
+            ShowAllNurses(
+                isDarkMode = isDarkMode,
+                isSpanish = isSpanish,
+                onDarkModeChange = { isDarkMode = it },
+                onLanguageChange = { isSpanish = it },
+                onNavigateBack = { navController.popBackStack()},
+                onNurseClick = {
+                        nurseId ->
+                    navController.navigate("nurse_details/$nurseId")
+                })
         }
 
 
@@ -96,7 +111,13 @@ fun AppNavigation() {
             arguments = listOf(navArgument("id") { type = NavType.IntType })
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getInt("id") ?: 0
-            NurseDetailScreen(nurseId = id)
+            NurseDetailScreen(
+                isDarkMode = isDarkMode,
+                isSpanish = isSpanish,
+                onDarkModeChange = { isDarkMode = it},
+                onLanguageChange = { isSpanish = it},
+                nurseId = id,
+                onNavigateBack = { navController.popBackStack() })
         }
     }
 }

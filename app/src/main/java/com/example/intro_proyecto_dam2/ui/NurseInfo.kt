@@ -1,88 +1,196 @@
-package com.example.intro_proyecto_dam2
+package com.example.intro_proyecto_dam2.ui // Asegúrate de que el paquete sea correcto
 
-
-import android.util.Log
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.SegmentedButtonDefaults.Icon
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
+import com.example.intro_proyecto_dam2.Nurses
+import com.example.intro_proyecto_dam2.R
 
 @Composable
-fun NurseDetailScreen(nurseId: Int) {
-
-
+fun NurseDetailScreen(
+    nurseId: Int,
+    onNavigateBack: () -> Unit,
+    isDarkMode: Boolean,
+    isSpanish: Boolean,
+    onDarkModeChange: (Boolean) -> Unit,
+    onLanguageChange: (Boolean) -> Unit
+) {
     val nurse = Nurses.find { it.id == nurseId }
+    var menuExpanded by remember { mutableStateOf(false) }
 
-    if (nurse == null) {
-        Text("¡Error! Nurse not found")
-        return 
-    }
+    // --- RECURSOS Y COLORES ---
+    val currentBackgroundColor = colorResource(if (isDarkMode) R.color.background_night else R.color.background)
+    val textLangOption = stringResource(if (isSpanish) R.string.menu_lang_to_en else R.string.menu_lang_to_es)
+    val textThemeOption = stringResource(
+        if (isSpanish) {
+            if (isDarkMode) R.string.menu_theme_light_es else R.string.menu_theme_dark_es
+        } else {
+            if (isDarkMode) R.string.menu_theme_light_en else R.string.menu_theme_dark_en
+        }
+    )
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+    val mainTextColor = if (isDarkMode) Color.White else Color.Black
+    val secondaryTextColor = if (isDarkMode) Color.LightGray else Color.Gray
+    val cardBackgroundColor = if (isDarkMode) Color(0xFF2D2D2D) else Color.White
+
+    // --- ESTRUCTURA PRINCIPAL ---
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(currentBackgroundColor)
+            .padding(16.dp)
     ) {
-        Card(
-            modifier = Modifier.padding(20.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        // --- CABECERA (Botón Atrás + Título + Configuración) ---
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 20.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(
-                modifier = Modifier.padding(32.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = null,
-                    modifier = Modifier.size(80.dp)
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                // Botón Atrás
+                IconButton(onClick = onNavigateBack) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back",
+                        tint = mainTextColor
+                    )
+                }
+                Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = nurse.name,
+                    text = if (isSpanish) "Detalles" else "Details",
                     fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = mainTextColor
                 )
+            }
 
-                Spacer(modifier = Modifier.height(8.dp))
+            // Botón Configuración
+            Box {
+                IconButton(onClick = { menuExpanded = true }) {
+                    Image(
+                        painterResource(if (isDarkMode) R.drawable.settings_icon_dark else R.drawable.settings_icon_light),
+                        contentDescription = "Configuración",
+                        modifier = Modifier.size(40.dp)
+                    )
+                }
 
+                DropdownMenu(
+                    expanded = menuExpanded,
+                    onDismissRequest = { menuExpanded = false },
+                ) {
+                    DropdownMenuItem(
+                        text = { Text(text = textLangOption) },
+                        onClick = { onLanguageChange(!isSpanish); menuExpanded = false },
+                        leadingIcon = {
+                            Image(
+                                painter = painterResource(if (isSpanish) R.drawable.uk_language_icon else R.drawable.spain_languange_icon),
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text(text = textThemeOption) },
+                        onClick = { onDarkModeChange(!isDarkMode); menuExpanded = false },
+                        leadingIcon = {
+                            Image(
+                                painter = painterResource(if (isDarkMode) R.drawable.theme_icon_light else R.drawable.theme_icon_dark),
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                    )
+                }
+            }
+        }
 
-                Text(text = nurse.email)
+        // --- CONTENIDO (Tarjeta del Enfermero) ---
+        if (nurse == null) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(
+                    text = if(isSpanish) "¡Error! Enfermero no encontrado" else "Error! Nurse not found",
+                    color = Color.Red,
+                    fontSize = 18.sp
+                )
+            }
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f), // Ocupa el espacio restante
+                contentAlignment = Alignment.Center
+            ) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+                    colors = CardDefaults.cardColors(containerColor = cardBackgroundColor)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(32.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        // Imagen de Perfil
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(100.dp)
+                                .background(MaterialTheme.colorScheme.primary, CircleShape)
+                                .padding(10.dp),
+                            tint = Color.White
+                        )
 
+                        Spacer(modifier = Modifier.height(24.dp))
 
-                Text(text = "ID: ${nurse.id}")
+                        // Nombre
+                        Text(
+                            text = "${nurse.first_name} ${nurse.last_name}",
+                            fontSize = 26.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = mainTextColor,
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // Detalles adicionales
+                        HorizontalDivider(color = secondaryTextColor, thickness = 1.dp)
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text(
+                            text = "ID: ${nurse.id}",
+                            fontSize = 16.sp,
+                            color = secondaryTextColor
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = nurse.email,
+                            fontSize = 16.sp,
+                            color = secondaryTextColor
+                        )
+                    }
+                }
             }
         }
     }
-
-
 }

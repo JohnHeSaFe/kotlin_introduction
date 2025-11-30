@@ -28,7 +28,8 @@ fun HomeScreen(
     onLanguageChange: (Boolean) -> Unit,
     onNavigateToLogin: () -> Unit,
     onNavigateToRegister: () -> Unit,
-    onNavigateToSearch: () -> Unit
+    onNavigateToSearch: () -> Unit,
+    onNavigateToShowall: () -> Unit
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
 
@@ -186,7 +187,7 @@ fun HomeScreen(
                 text = textShowAll,
                 bgColor = currentSecondaryColor,
                 textColor = currentPrimaryColor,
-                onClick = {}
+                onClick = onNavigateToShowall
             )
         }
     }
@@ -203,7 +204,8 @@ fun HomeScreenPreview() {
         onLanguageChange = {},
         onNavigateToLogin = {},
         onNavigateToRegister = {},
-        onNavigateToSearch = {}
+        onNavigateToSearch = {},
+        onNavigateToShowall = {}
     )
 }
 

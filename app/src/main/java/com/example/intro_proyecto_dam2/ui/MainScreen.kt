@@ -18,8 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.intro_proyecto_dam2.R
 
-
-
 @Composable
 fun HomeScreen(
     isDarkMode: Boolean,
@@ -52,8 +50,6 @@ fun HomeScreen(
     val textSubtitle = stringResource(if (isSpanish) R.string.subtitle_es else R.string.subtitle_en)
     val textLogin = stringResource(if (isSpanish) R.string.btn_login_es else R.string.btn_login_en)
     val textRegister = stringResource(if (isSpanish) R.string.btn_register_es else R.string.btn_register_en)
-    val textSearch = stringResource(if (isSpanish) R.string.btn_search_es else R.string.btn_search_en)
-    val textShowAll = stringResource(if (isSpanish) R.string.btn_showall_es else R.string.btn_showall_en)
     val textLangOption = stringResource(if (isSpanish) R.string.menu_lang_to_en else R.string.menu_lang_to_es)
     val textThemeOption = stringResource(
         if (isSpanish) {
@@ -158,7 +154,7 @@ fun HomeScreen(
             )
         }
 
-        // Botones
+        // Botones (solo Login y Registro)
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -177,22 +173,9 @@ fun HomeScreen(
                 textColor = currentSecondaryColor,
                 onClick = onNavigateToRegister
             )
-            Boton(
-                text = textSearch,
-                bgColor = currentSecondaryColor,
-                textColor = currentPrimaryColor,
-                onClick = onNavigateToSearch
-            )
-            Boton(
-                text = textShowAll,
-                bgColor = currentSecondaryColor,
-                textColor = currentPrimaryColor,
-                onClick = onNavigateToShowall
-            )
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
@@ -208,7 +191,6 @@ fun HomeScreenPreview() {
         onNavigateToShowall = {}
     )
 }
-
 
 @Composable
 fun Boton(text: String, bgColor: androidx.compose.ui.graphics.Color, textColor: androidx.compose.ui.graphics.Color, onClick: () -> Unit) {
@@ -230,4 +212,3 @@ fun Boton(text: String, bgColor: androidx.compose.ui.graphics.Color, textColor: 
         )
     }
 }
-

@@ -94,4 +94,14 @@
     <string name="forgot_error_empty_en">Please enter your email</string>
     <string name="forgot_error_invalid_en">Invalid email address</string>
     <string name="forgot_success_en">A link has been sent to your email</string>
+
+    <!-- Dashboarda Screen - Spanish -->
+    <string name="dashboard_title_es">Panel Principal</string>
+    <string name="dashboard_subtitle_es">Gestiona la información de enfermeras</string>
+    <string name="dashboard_logout_es">Cerrar Sesión</string>
+
+    <!-- Dashboarda Screen - English -->
+    <string name="dashboard_title_en">Dashboard</string>
+    <string name="dashboard_subtitle_en">Manage nurse information</string>
+    <string name="dashboard_logout_en">Log Out</string>
 </resources>

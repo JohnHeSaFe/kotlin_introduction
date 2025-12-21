@@ -35,7 +35,8 @@ fun LoginScreenPreview() {
         onLanguageChange = {},
         onNavigateToRegister = {},
         onNavigateToForgotPassword = {},
-        onNavigateBack = {}
+        onNavigateBack = {},
+        onNavigateToDashboard = {}
     )
 }
 
@@ -47,7 +48,8 @@ fun LoginScreen(
     onLanguageChange: (Boolean) -> Unit,
     onNavigateToRegister: () -> Unit,
     onNavigateToForgotPassword: () -> Unit,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onNavigateToDashboard: () -> Unit
 ) {
     // Estados del formulario
     var email by remember { mutableStateOf("") }
@@ -80,7 +82,7 @@ fun LoginScreen(
         }
     )
 
-    // Colores para los inputs (más claros)
+    // Colores para los inputs
     val inputColors = OutlinedTextFieldDefaults.colors(
         focusedContainerColor = Color.White,
         unfocusedContainerColor = Color.White,
@@ -221,7 +223,7 @@ fun LoginScreen(
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Image(
                             painter = painterResource(
-                                if (passwordVisible) R.drawable.visibility_on_icon 
+                                if (passwordVisible) R.drawable.visibility_on_icon
                                 else R.drawable.visibility_off_icon
                             ),
                             contentDescription = "Toggle password",
@@ -260,7 +262,9 @@ fun LoginScreen(
                         errorMessage = errorEmpty
                     } else {
                         errorMessage = ""
-                        // TODO: lógica de login
+                        // TODO: lógica de login real
+                        // Por ahora, siempre navega al dashboard si los campos están llenos
+                        onNavigateToDashboard()
                     }
                 },
                 modifier = Modifier

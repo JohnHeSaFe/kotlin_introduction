@@ -16,14 +16,17 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.intro_proyecto_dam2.Nurses
 import com.example.intro_proyecto_dam2.R
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.intro_proyecto_dam2.ui.viewmodels.NurseViewModel
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 
 @Composable
 fun NurseDetailScreen(
+    viewModel: NurseViewModel = viewModel(),
     nurseId: Int,
     onNavigateBack: () -> Unit,
     isDarkMode: Boolean,
@@ -31,7 +34,9 @@ fun NurseDetailScreen(
     onDarkModeChange: (Boolean) -> Unit,
     onLanguageChange: (Boolean) -> Unit
 ) {
-    val nurse = Nurses.find { it.id == nurseId }
+    val nurseList by viewModel.nurseList.collectAsState()
+
+    val nurse = nurseList.find { it.id == nurseId }
     var menuExpanded by remember { mutableStateOf(false) }
 
     // --- RECURSOS Y COLORES ---
@@ -150,15 +155,28 @@ fun NurseDetailScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         // Imagen de Perfil
-                        Icon(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(100.dp)
-                                .background(MaterialTheme.colorScheme.primary, CircleShape)
-                                .padding(10.dp),
-                            tint = Color.White
-                        )
+                        if (nurse.profile_picture != null) {
+                            Image(
+                                painter = painterResource(id = nurse.profile_picture),
+                                contentDescription = "Foto de perfil",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(120.dp)
+                                    .clip(CircleShape)
+                                    .background(Color.Gray)
+                            )
+                        } else {
+                            // Icono por defecto si no tiene foto (Tu código original)
+                            Icon(
+                                imageVector = Icons.Default.Person,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(100.dp)
+                                    .background(MaterialTheme.colorScheme.primary, CircleShape)
+                                    .padding(10.dp),
+                                tint = Color.White
+                            )
+                        }
 
                         Spacer(modifier = Modifier.height(24.dp))
 

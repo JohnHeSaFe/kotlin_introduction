@@ -22,11 +22,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.intro_proyecto_dam2.Nurse
-import com.example.intro_proyecto_dam2.Nurses
 import com.example.intro_proyecto_dam2.R
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.intro_proyecto_dam2.ui.viewmodels.NurseViewModel
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.layout.ContentScale
 
 @Composable
 fun ShowAllNurses(
+    viewModel: NurseViewModel = viewModel(),
     onNurseClick: (Int) -> Unit,
     isDarkMode: Boolean,
     isSpanish: Boolean,
@@ -34,6 +39,8 @@ fun ShowAllNurses(
     onLanguageChange: (Boolean) -> Unit,
     onNavigateBack: () -> Unit
 ) {
+    val nurseList by viewModel.nurseList.collectAsState()
+
     var menuExpanded by remember { mutableStateOf(false) }
     val currentBackgroundColor = colorResource(if (isDarkMode) R.color.background_night else R.color.background)
 
@@ -128,8 +135,8 @@ fun ShowAllNurses(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxSize()
         ) {
-            items(Nurses) { nurse ->
-                NurseItemCard(onNurseClick = onNurseClick,nurse = nurse, isDarkMode = isDarkMode)
+            items(nurseList) { nurse ->
+                NurseItemCard(onNurseClick = onNurseClick, nurse = nurse, isDarkMode = isDarkMode)
             }
         }
     }
@@ -141,6 +148,8 @@ fun NurseItemCard(onNurseClick: (Int) -> Unit,nurse: Nurse, isDarkMode: Boolean)
     val cardBackgroundColor = if (isDarkMode) Color(0xFF2D2D2D) else Color.White // Gris oscuro vs Blanco
     val nameTextColor = if (isDarkMode) Color.White else Color.Black
     val emailTextColor = if (isDarkMode) Color.LightGray else Color.Gray
+
+    val primaryColor = colorResource(if (isDarkMode) R.color.primary_night else R.color.primary)
 
     Card(
         modifier = Modifier
@@ -159,16 +168,30 @@ fun NurseItemCard(onNurseClick: (Int) -> Unit,nurse: Nurse, isDarkMode: Boolean)
             verticalAlignment = Alignment.CenterVertically,
 
         ) {
-            Icon(
-                imageVector = Icons.Default.Person,
-                contentDescription = "Foto de perfil",
-                modifier = Modifier
-                    .size(40.dp)
-                    .background(MaterialTheme.colorScheme.primary, shape = MaterialTheme.shapes.small)
-                    .padding(4.dp),
-                tint = Color.White
-            )
+            if (nurse.profile_picture != null) {
+                Image(
+                    painter = painterResource(id = nurse.profile_picture),
+                    contentDescription = "Foto de perfil",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clip(CircleShape)
+                        .background(Color.Gray)
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = "Foto de perfil",
+                    modifier = Modifier
+                        .size(40.dp)
+                        .background(primaryColor, shape = MaterialTheme.shapes.small)
+                        .padding(4.dp),
+                    tint = Color.White
+                )
+            }
+
             Spacer(modifier = Modifier.width(16.dp))
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = "${nurse.first_name} ${nurse.last_name}",

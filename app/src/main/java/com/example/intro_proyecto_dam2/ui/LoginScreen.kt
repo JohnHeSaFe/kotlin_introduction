@@ -24,6 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.intro_proyecto_dam2.R
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.intro_proyecto_dam2.ui.viewmodels.NurseViewModel
 
 @Preview(showBackground = true)
 @Composable
@@ -42,6 +44,7 @@ fun LoginScreenPreview() {
 
 @Composable
 fun LoginScreen(
+    viewModel: NurseViewModel = viewModel(),
     isDarkMode: Boolean,
     isSpanish: Boolean,
     onDarkModeChange: (Boolean) -> Unit,
@@ -73,6 +76,7 @@ fun LoginScreen(
     val noAccount = stringResource(if (isSpanish) R.string.login_no_account_es else R.string.login_no_account_en)
     val registerLink = stringResource(if (isSpanish) R.string.login_register_link_es else R.string.login_register_link_en)
     val errorEmpty = stringResource(if (isSpanish) R.string.login_error_empty_es else R.string.login_error_empty_en)
+
     val langOption = stringResource(if (isSpanish) R.string.menu_lang_to_en else R.string.menu_lang_to_es)
     val themeOption = stringResource(
         if (isSpanish) {
@@ -261,9 +265,14 @@ fun LoginScreen(
                     if (email.isEmpty() || password.isEmpty()) {
                         errorMessage = errorEmpty
                     } else {
+                        val loginSuccess = viewModel.login(email, password)
+                        if (loginSuccess) {
+                            errorMessage = ""
+                            onNavigateToDashboard() // Navegar si es correcto
+                        } else {
+                            errorMessage = if (isSpanish) "Credenciales incorrectas" else "Invalid credentials"
+                        }
                         errorMessage = ""
-                        // TODO: lógica de login real
-                        // Por ahora, siempre navega al dashboard si los campos están llenos
                         onNavigateToDashboard()
                     }
                 },

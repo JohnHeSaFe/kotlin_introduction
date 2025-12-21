@@ -21,6 +21,10 @@ class NurseViewModel : ViewModel() {
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
 
+    fun generateNextId(): Int {
+        return (_allNurses.maxOfOrNull { it.id } ?: 0) + 1
+    }
+
     // Register and login methods
     fun register(nurse: Nurse): Boolean {
         // Validate email repetition
@@ -30,6 +34,8 @@ class NurseViewModel : ViewModel() {
 
         // Add nurse to memory
         _allNurses.add(nurse)
+
+        onSearchTextChange(_searchText.value)
 
         return true
     }

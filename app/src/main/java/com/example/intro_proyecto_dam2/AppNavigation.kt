@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,10 +18,13 @@ import com.example.intro_proyecto_dam2.ui.LoginScreen
 import com.example.intro_proyecto_dam2.ui.NurseDetailScreen
 import com.example.intro_proyecto_dam2.ui.RegisterScreen
 import com.example.intro_proyecto_dam2.ui.ShowAllNurses
+import com.example.intro_proyecto_dam2.ui.viewmodels.NurseViewModel
 
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
+
+    val nurseViewModel: NurseViewModel = viewModel()
 
     var isDarkMode by remember { mutableStateOf(false) }
     var isSpanish by remember { mutableStateOf(true) }
@@ -45,6 +49,7 @@ fun AppNavigation() {
         // Pantalla de login
         composable("login") {
             LoginScreen(
+                viewModel = nurseViewModel,
                 isDarkMode = isDarkMode,
                 isSpanish = isSpanish,
                 onDarkModeChange = { isDarkMode = it },
@@ -63,6 +68,7 @@ fun AppNavigation() {
         // Pantalla de registro
         composable("register") {
             RegisterScreen(
+                viewModel = nurseViewModel,
                 isDarkMode = isDarkMode,
                 isSpanish = isSpanish,
                 onDarkModeChange = { isDarkMode = it },
@@ -123,6 +129,7 @@ fun AppNavigation() {
         // Pantalla de listar todos (solo accesible desde Dashboard)
         composable("show_all_nurses") {
             ShowAllNurses(
+                viewModel = nurseViewModel,
                 isDarkMode = isDarkMode,
                 isSpanish = isSpanish,
                 onDarkModeChange = { isDarkMode = it },

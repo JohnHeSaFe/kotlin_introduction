@@ -26,6 +26,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.intro_proyecto_dam2.R
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.intro_proyecto_dam2.ui.viewmodels.NurseViewModel
+import com.example.intro_proyecto_dam2.Nurse
+import kotlin.random.Random
 
 @Preview(showBackground = true)
 @Composable
@@ -43,6 +47,7 @@ fun RegisterScreenPreview() {
 
 @Composable
 fun RegisterScreen(
+    viewModel: NurseViewModel = viewModel(),
     isDarkMode: Boolean,
     isSpanish: Boolean,
     onDarkModeChange: (Boolean) -> Unit,
@@ -332,6 +337,24 @@ fun RegisterScreen(
                             successMessage = ""
                         }
                         else -> {
+                            val newNurse = Nurse(
+                                id = viewModel.generateNextId(),
+                                first_name = nombre,
+                                last_name = "",
+                                email = email,
+                                password = password,
+                                profile_picture = null
+                            )
+
+                            val registerSuccess = viewModel.register(newNurse)
+
+                            if (registerSuccess) {
+                                errorMessage = ""
+                                successMessage = success
+                            } else {
+                                errorMessage = if (isSpanish) "El email ya existe" else "Email already exists"
+                                successMessage = ""
+                            }
                             errorMessage = ""
                             successMessage = success
                             // TODO: lógica de registro real

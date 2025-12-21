@@ -265,15 +265,12 @@ fun LoginScreen(
                     if (email.isEmpty() || password.isEmpty()) {
                         errorMessage = errorEmpty
                     } else {
-                        val loginSuccess = viewModel.login(email, password)
-                        if (loginSuccess) {
+                        if (viewModel.login(email, password)) {
                             errorMessage = ""
-                            onNavigateToDashboard() // Navegar si es correcto
+                            onNavigateToDashboard()
                         } else {
                             errorMessage = if (isSpanish) "Credenciales incorrectas" else "Invalid credentials"
                         }
-                        errorMessage = ""
-                        onNavigateToDashboard()
                     }
                 },
                 modifier = Modifier

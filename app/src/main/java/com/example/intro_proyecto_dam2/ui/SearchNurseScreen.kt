@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
@@ -15,7 +16,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -197,11 +200,27 @@ fun SearchNurse(
                             )
                         },
                         leadingContent = {
-                            Icon(
-                                Icons.Default.Person,
-                                contentDescription = null,
-                                tint = searchBarContentColor
-                            )
+                            if (nurse.profile_picture != null) {
+                                Image(
+                                    painter = painterResource(id = nurse.profile_picture),
+                                    contentDescription = "Foto de perfil",
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier
+                                        .size(50.dp)
+                                        .clip(CircleShape)
+                                        .background(Color.Gray)
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = "Foto de perfil",
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .background(currentBackgroundColor, shape = MaterialTheme.shapes.small)
+                                        .padding(4.dp),
+                                    tint = Color.White
+                                )
+                            }
                         },
                         colors = ListItemDefaults.colors(
                             containerColor = listItemContainerColor

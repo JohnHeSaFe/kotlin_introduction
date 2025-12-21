@@ -25,9 +25,7 @@ fun HomeScreen(
     onDarkModeChange: (Boolean) -> Unit,
     onLanguageChange: (Boolean) -> Unit,
     onNavigateToLogin: () -> Unit,
-    onNavigateToRegister: () -> Unit,
-    onNavigateToSearch: () -> Unit,
-    onNavigateToShowall: () -> Unit
+    onNavigateToRegister: () -> Unit
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
 
@@ -186,9 +184,7 @@ fun HomeScreenPreview() {
         onDarkModeChange = {},
         onLanguageChange = {},
         onNavigateToLogin = {},
-        onNavigateToRegister = {},
-        onNavigateToSearch = {},
-        onNavigateToShowall = {}
+        onNavigateToRegister = {}
     )
 }
 

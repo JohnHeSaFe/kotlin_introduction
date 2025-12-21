@@ -31,7 +31,7 @@ fun AppNavigation() {
 
     NavHost(navController = navController, startDestination = "home") {
 
-        // Pantalla de inicio (solo entrada)
+        // Pantalla de inicio
         composable("home") {
             HomeScreen(
                 isDarkMode = isDarkMode,
@@ -40,9 +40,6 @@ fun AppNavigation() {
                 onLanguageChange = { isSpanish = it },
                 onNavigateToLogin = { navController.navigate("login") },
                 onNavigateToRegister = { navController.navigate("register") },
-                // Estas opciones ya no están disponibles desde Home
-                onNavigateToSearch = { /* No hace nada */ },
-                onNavigateToShowall = { /* No hace nada */ }
             )
         }
 
@@ -104,7 +101,6 @@ fun AppNavigation() {
                 onNavigateToSearch = { navController.navigate("search_nurse") },
                 onNavigateToShowAll = { navController.navigate("show_all_nurses") },
                 onLogout = {
-                    // Volver a home y limpiar el back stack
                     navController.navigate("home") {
                         popUpTo("home") { inclusive = true }
                     }

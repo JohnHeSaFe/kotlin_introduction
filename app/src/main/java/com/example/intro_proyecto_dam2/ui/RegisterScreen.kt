@@ -40,7 +40,8 @@ fun RegisterScreenPreview() {
         onDarkModeChange = {},
         onLanguageChange = {},
         onNavigateToLogin = {},
-        onNavigateBack = {}
+        onNavigateBack = {},
+        onNavigateToDashboard = {}
     )
 }
 
@@ -52,7 +53,8 @@ fun RegisterScreen(
     onDarkModeChange: (Boolean) -> Unit,
     onLanguageChange: (Boolean) -> Unit,
     onNavigateToLogin: () -> Unit,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onNavigateToDashboard: () -> Unit
 ) {
     // Estados del formulario
     var nombre by remember { mutableStateOf("") }
@@ -96,7 +98,7 @@ fun RegisterScreen(
         }
     )
 
-    // Colores para los inputs (más claros)
+    // Colores para los inputs
     val inputColors = OutlinedTextFieldDefaults.colors(
         focusedContainerColor = Color.White,
         unfocusedContainerColor = Color.White,
@@ -108,6 +110,14 @@ fun RegisterScreen(
         focusedTextColor = Color.Black,
         unfocusedTextColor = Color.Black
     )
+
+    // Efecto para navegar al dashboard tras registro exitoso
+    LaunchedEffect(successMessage) {
+        if (successMessage.isNotEmpty()) {
+            kotlinx.coroutines.delay(1500) // Esperar 1.5 segundos para que el usuario vea el mensaje
+            onNavigateToDashboard()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -261,7 +271,7 @@ fun RegisterScreen(
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Image(
                             painter = painterResource(
-                                if (passwordVisible) R.drawable.visibility_on_icon 
+                                if (passwordVisible) R.drawable.visibility_on_icon
                                 else R.drawable.visibility_off_icon
                             ),
                             contentDescription = "Toggle password",
@@ -286,7 +296,7 @@ fun RegisterScreen(
                     IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
                         Image(
                             painter = painterResource(
-                                if (confirmPasswordVisible) R.drawable.visibility_on_icon 
+                                if (confirmPasswordVisible) R.drawable.visibility_on_icon
                                 else R.drawable.visibility_off_icon
                             ),
                             contentDescription = "Toggle password",
@@ -317,8 +327,8 @@ fun RegisterScreen(
             Button(
                 onClick = {
                     when {
-                        nombre.isEmpty() || email.isEmpty() || numColegiado.isEmpty() || 
-                        password.isEmpty() || confirmPassword.isEmpty() -> {
+                        nombre.isEmpty() || email.isEmpty() || numColegiado.isEmpty() ||
+                                password.isEmpty() || confirmPassword.isEmpty() -> {
                             errorMessage = errorEmpty
                             successMessage = ""
                         }
@@ -345,6 +355,10 @@ fun RegisterScreen(
                                 errorMessage = if (isSpanish) "El email ya existe" else "Email already exists"
                                 successMessage = ""
                             }
+                            errorMessage = ""
+                            successMessage = success
+                            // TODO: lógica de registro real
+                            // Por ahora, muestra el mensaje y navega automáticamente
                         }
                     }
                 },

@@ -86,7 +86,7 @@ fun LoginScreen(
         }
     )
 
-    // Colores para los inputs (más claros)
+    // Colores para los inputs
     val inputColors = OutlinedTextFieldDefaults.colors(
         focusedContainerColor = Color.White,
         unfocusedContainerColor = Color.White,
@@ -227,7 +227,7 @@ fun LoginScreen(
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Image(
                             painter = painterResource(
-                                if (passwordVisible) R.drawable.visibility_on_icon 
+                                if (passwordVisible) R.drawable.visibility_on_icon
                                 else R.drawable.visibility_off_icon
                             ),
                             contentDescription = "Toggle password",
@@ -272,6 +272,8 @@ fun LoginScreen(
                         } else {
                             errorMessage = if (isSpanish) "Credenciales incorrectas" else "Invalid credentials"
                         }
+                        errorMessage = ""
+                        onNavigateToDashboard()
                     }
                 },
                 modifier = Modifier

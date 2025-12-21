@@ -23,24 +23,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.intro_proyecto_dam2.ui.Boton
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.intro_proyecto_dam2.ui.viewmodels.NurseViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchNurse(
     onNurseClick: (Int) -> Unit,
-    // Nuevos parámetros de estado
     isDarkMode: Boolean,
     isSpanish: Boolean,
     onDarkModeChange: (Boolean) -> Unit,
     onLanguageChange: (Boolean) -> Unit,
-    onNavigateBack:  () -> Unit
+    onNavigateBack: () -> Unit,
+    viewModel: NurseViewModel = viewModel()
 ) {
-    var query by remember { mutableStateOf("") }
+    // Collect State from ViewModel (Survives rotation)
+    val nurseList by viewModel.nurseList.collectAsState()
+    val searchText by viewModel.searchText.collectAsState()
+
     var active by remember { mutableStateOf(false) }
     var menuExpanded by remember { mutableStateOf(false) }
 
-    // --- RECURSOS Y COLORES (Igual que en las otras pantallas) ---
+    // --- RESOURCES & COLORS ---
     val currentBackgroundColor = colorResource(if (isDarkMode) R.color.background_night else R.color.background)
     val textLangOption = stringResource(if (isSpanish) R.string.menu_lang_to_en else R.string.menu_lang_to_es)
     val textThemeOption = stringResource(
@@ -51,13 +55,12 @@ fun SearchNurse(
         }
     )
     val searchPlaceholder = if (isSpanish) "Buscar enfermero..." else "Search Nurse..."
-    val titleText = if (isSpanish) "Buscador" else "Search"
     val mainTitleColor = if (isDarkMode) Color.White else Color.Black
 
-    // Colores específicos para la barra de búsqueda y lista
+    // Specific colors for search bar and list
     val searchBarContainerColor = if (isDarkMode) Color(0xFF2D2D2D) else MaterialTheme.colorScheme.surface
     val searchBarContentColor = if (isDarkMode) Color.White else Color.Black
-    val listItemContainerColor = if (isDarkMode) Color(0xFF1E1E1E) else Color.Transparent // Fondo de items
+    val listItemContainerColor = if (isDarkMode) Color(0xFF1E1E1E) else Color.Transparent
 
     Column(
         modifier = Modifier
@@ -65,10 +68,9 @@ fun SearchNurse(
             .background(currentBackgroundColor)
             .padding(16.dp)
     ) {
-        // --- CABECERA (Título + Configuración) ---
-        // Solo mostramos la cabecera si la búsqueda NO está activa (expandida)
+        // --- HEADER (Title + Settings) ---
+        // Hidden when search is active/expanded
         if (!active) {
-            // --- CABECERA (Botón Atrás + Título + Configuración) ---
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -77,7 +79,7 @@ fun SearchNurse(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    // Botón Atrás
+                    // Back Button
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -94,7 +96,7 @@ fun SearchNurse(
                     )
                 }
 
-                // Botón Configuración
+                // Settings Button
                 Box {
                     IconButton(onClick = { menuExpanded = true }) {
                         Image(
@@ -137,8 +139,11 @@ fun SearchNurse(
 
         // --- SEARCH BAR ---
         SearchBar(
-            query = query,
-            onQueryChange = { query = it },
+            query = searchText, // Reading from ViewModel
+            onQueryChange = {
+                // Writing to ViewModel
+                viewModel.onSearchTextChange(it)
+            },
             onSearch = { active = false },
             active = active,
             onActiveChange = { active = it },
@@ -151,12 +156,15 @@ fun SearchNurse(
                         contentDescription = "Cerrar",
                         tint = searchBarContentColor,
                         modifier = Modifier.clickable {
-                            if (query.isNotEmpty()) query = "" else active = false
+                            if (searchText.isNotEmpty()) {
+                                viewModel.onSearchTextChange("") // Clear text in VM
+                            } else {
+                                active = false
+                            }
                         }
                     )
                 }
             },
-            // Personalizamos los colores de la barra
             colors = SearchBarDefaults.colors(
                 containerColor = searchBarContainerColor,
                 inputFieldColors = TextFieldDefaults.colors(
@@ -167,23 +175,19 @@ fun SearchNurse(
             ),
             modifier = Modifier.fillMaxWidth()
         ) {
-            // Lógica de filtrado
-            val filteredNurses = Nurses.filter { Nurse ->
-                (Nurse.first_name + " " + Nurse.last_name).contains(query, ignoreCase = true) ||
-                        Nurse.email.contains(query, ignoreCase = true)
-            }
-
+            // Content of the Search Bar (The List)
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(currentBackgroundColor) // Fondo de la lista desplegada
+                    .background(currentBackgroundColor)
             ) {
-                items(filteredNurses) { nurse ->
+                // Using the filtered list from ViewModel
+                items(nurseList) { nurse ->
                     ListItem(
                         headlineContent = {
                             Text(
                                 text = "${nurse.first_name} ${nurse.last_name}",
-                                color = searchBarContentColor // Texto adaptable
+                                color = searchBarContentColor
                             )
                         },
                         supportingContent = {
@@ -200,10 +204,11 @@ fun SearchNurse(
                             )
                         },
                         colors = ListItemDefaults.colors(
-                            containerColor = listItemContainerColor // Fondo del item
+                            containerColor = listItemContainerColor
                         ),
                         modifier = Modifier.clickable {
-                            query = "${nurse.first_name} ${nurse.last_name}"
+                            // Update text in VM to match selection
+                            viewModel.onSearchTextChange("${nurse.first_name} ${nurse.last_name}")
                             active = false
                             onNurseClick(nurse.id)
                         }

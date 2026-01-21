@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.intro_proyecto_dam2.ui.viewmodels.NurseViewModel
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.shape.CircleShape
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,6 +51,7 @@ fun SearchNurse(
 
     // --- RESOURCES & COLORS ---
     val currentBackgroundColor = colorResource(if (isDarkMode) R.color.background_night else R.color.background)
+    val primaryColor = colorResource(if (isDarkMode) R.color.primary_night else R.color.primary)
     val textLangOption = stringResource(if (isSpanish) R.string.menu_lang_to_en else R.string.menu_lang_to_es)
     val textThemeOption = stringResource(
         if (isSpanish) {

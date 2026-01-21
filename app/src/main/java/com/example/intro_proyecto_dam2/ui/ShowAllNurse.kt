@@ -145,7 +145,7 @@ fun ShowAllNurses(
 @Composable
 fun NurseItemCard(onNurseClick: (Int) -> Unit,nurse: Nurse, isDarkMode: Boolean) {
 
-    val cardBackgroundColor = if (isDarkMode) Color(0xFF2D2D2D) else Color.White // Gris oscuro vs Blanco
+    val cardBackgroundColor = if (isDarkMode) Color(0xFF2D2D2D) else Color.White
     val nameTextColor = if (isDarkMode) Color.White else Color.Black
     val emailTextColor = if (isDarkMode) Color.LightGray else Color.Gray
 

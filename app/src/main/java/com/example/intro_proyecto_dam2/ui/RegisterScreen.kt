@@ -351,14 +351,11 @@ fun RegisterScreen(
                             if (registerSuccess) {
                                 errorMessage = ""
                                 successMessage = success
+
                             } else {
                                 errorMessage = if (isSpanish) "El email ya existe" else "Email already exists"
                                 successMessage = ""
                             }
-                            errorMessage = ""
-                            successMessage = success
-                            // TODO: lógica de registro real
-                            // Por ahora, muestra el mensaje y navega automáticamente
                         }
                     }
                 },

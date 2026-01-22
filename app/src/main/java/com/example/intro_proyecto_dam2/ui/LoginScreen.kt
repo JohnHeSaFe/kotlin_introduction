@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import com.example.intro_proyecto_dam2.R
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.intro_proyecto_dam2.ui.viewmodels.NurseViewModel
+import kotlinx.coroutines.launch
 
 @Preview(showBackground = true)
 @Composable
@@ -98,6 +99,8 @@ fun LoginScreen(
         focusedTextColor = Color.Black,
         unfocusedTextColor = Color.Black
     )
+
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -265,11 +268,13 @@ fun LoginScreen(
                     if (email.isEmpty() || password.isEmpty()) {
                         errorMessage = errorEmpty
                     } else {
-                        if (viewModel.login(email, password)) {
-                            errorMessage = ""
-                            onNavigateToDashboard()
-                        } else {
-                            errorMessage = if (isSpanish) "Credenciales incorrectas" else "Invalid credentials"
+                        scope.launch {
+                            if (viewModel.login(email, password)) {
+                                errorMessage = ""
+                                onNavigateToDashboard()
+                            } else {
+                                errorMessage = if (isSpanish) "Credenciales incorrectas" else "Invalid credentials"
+                            }
                         }
                     }
                 },

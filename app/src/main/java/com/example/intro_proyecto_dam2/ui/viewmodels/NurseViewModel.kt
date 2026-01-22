@@ -3,7 +3,6 @@ package com.example.intro_proyecto_dam2.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.intro_proyecto_dam2.Nurse
-import com.example.intro_proyecto_dam2.R
 import com.example.intro_proyecto_dam2.network.RetrofitInstance
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,12 +11,7 @@ import kotlinx.coroutines.launch
 class NurseViewModel : ViewModel() {
 
 
-    private val _allNurses = mutableListOf(
-        Nurse(id=1,first_name = "Justin", last_name = "Suarez", email = "zjs.suarez@asd.com",password="asd1", profile_picture = R.drawable.asd),
-        Nurse(id=2,first_name = "John", last_name= "Salango", email = "henardsalango@asd.com",password="asd2", profile_picture = R.drawable.dawdsawdsawd),
-        Nurse(id=3, first_name = "Angelo", last_name = "Pozo" ,email = "apozo@asd.com",password="asd3", profile_picture = R.drawable.dsadasd),
-        Nurse(id=4, first_name = "Marc", last_name ="Munta", email = "marcmunta@asd.com",password="asd4", profile_picture = R.drawable.wdsawdsad)
-    )
+    private val _allNurses = mutableListOf<Nurse>()
 
     init {
         fetchNurses()
@@ -35,6 +29,7 @@ class NurseViewModel : ViewModel() {
 
             try {
                 val response = RetrofitInstance.api.getAllNurses()
+                _allNurses.addAll(response)
                 _nurseList.value = response
             } catch (e: Exception) {
                 println("Error: ${e.message}")
@@ -62,9 +57,19 @@ class NurseViewModel : ViewModel() {
         return true
     }
 
-    fun login(email: String, pass: String): Boolean {
-        return _allNurses.any {
-            it.email.equals(email, ignoreCase = true) && it.password == pass
+    suspend fun login(email: String, pass: String): Boolean {
+        return try {
+            val response = RetrofitInstance.api.login(mapOf("email" to email, "password" to pass))
+
+            val body = response.body()
+            if (response.isSuccessful) {
+                (body?.get("authenticated") ?: false)
+            } else {
+                false
+            }
+        } catch (e: Exception) {
+            print(e.message)
+            false
         }
     }
 

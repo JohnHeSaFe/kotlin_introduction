@@ -1,12 +1,16 @@
 package com.example.intro_proyecto_dam2.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.intro_proyecto_dam2.Nurse
 import com.example.intro_proyecto_dam2.R
+import com.example.intro_proyecto_dam2.network.RetrofitInstance
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class NurseViewModel : ViewModel() {
+
 
     private val _allNurses = mutableListOf(
         Nurse(id=1,first_name = "Justin", last_name = "Suarez", email = "zjs.suarez@asd.com",password="asd1", profile_picture = R.drawable.asd),
@@ -15,12 +19,30 @@ class NurseViewModel : ViewModel() {
         Nurse(id=4, first_name = "Marc", last_name ="Munta", email = "marcmunta@asd.com",password="asd4", profile_picture = R.drawable.wdsawdsad)
     )
 
+    init {
+        fetchNurses()
+    }
+
     private val _nurseList = MutableStateFlow<List<Nurse>>(_allNurses)
     val nurseList = _nurseList.asStateFlow()
 
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
 
+
+    fun fetchNurses() {
+        viewModelScope.launch {
+
+            try {
+                val response = RetrofitInstance.api.getAllNurses()
+                _nurseList.value = response
+            } catch (e: Exception) {
+                println("Error: ${e.message}")
+            } finally {
+
+            }
+        }
+    }
     fun generateNextId(): Int {
         return (_allNurses.maxOfOrNull { it.id } ?: 0) + 1
     }

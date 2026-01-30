@@ -6,5 +6,5 @@ package com.example.intro_proyecto_dam2
         val first_name: String,
         val last_name: String,
         val password: String,
-        val profile_picture: Int? = null
+        val profile_picture: String? = null
     )

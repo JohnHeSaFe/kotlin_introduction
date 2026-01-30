@@ -23,6 +23,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.intro_proyecto_dam2.ui.viewmodels.NurseViewModel
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.asImageBitmap
+import com.example.intro_proyecto_dam2.utils.decodeBase64ToBitmap
 
 @Composable
 fun NurseDetailScreen(
@@ -38,6 +40,10 @@ fun NurseDetailScreen(
 
     val nurse = nurseList.find { it.id == nurseId }
     var menuExpanded by remember { mutableStateOf(false) }
+
+    val bitmap = remember(nurse?.profile_picture) {
+        nurse?.profile_picture?.let { decodeBase64ToBitmap(it) }
+    }
 
     // --- RECURSOS Y COLORES ---
     val currentBackgroundColor = colorResource(if (isDarkMode) R.color.background_night else R.color.background)
@@ -155,9 +161,9 @@ fun NurseDetailScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         // Imagen de Perfil
-                        if (nurse.profile_picture != null) {
+                        if (bitmap != null) {
                             Image(
-                                painter = painterResource(id = nurse.profile_picture),
+                                bitmap = bitmap.asImageBitmap(),
                                 contentDescription = "Foto de perfil",
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier
@@ -166,7 +172,7 @@ fun NurseDetailScreen(
                                     .background(Color.Gray)
                             )
                         } else {
-                            // Icono por defecto si no tiene foto (Tu código original)
+                            // Icono por defecto si no tiene foto
                             Icon(
                                 imageVector = Icons.Default.Person,
                                 contentDescription = null,

@@ -16,6 +16,7 @@ import com.example.intro_proyecto_dam2.ui.ForgotPasswordScreen
 import com.example.intro_proyecto_dam2.ui.HomeScreen
 import com.example.intro_proyecto_dam2.ui.LoginScreen
 import com.example.intro_proyecto_dam2.ui.NurseDetailScreen
+import com.example.intro_proyecto_dam2.ui.ProfileScreen
 import com.example.intro_proyecto_dam2.ui.RegisterScreen
 import com.example.intro_proyecto_dam2.ui.ShowAllNurses
 import com.example.intro_proyecto_dam2.ui.viewmodels.NurseViewModel
@@ -100,6 +101,7 @@ fun AppNavigation() {
                 onLanguageChange = { isSpanish = it },
                 onNavigateToSearch = { navController.navigate("search_nurse") },
                 onNavigateToShowAll = { navController.navigate("show_all_nurses") },
+                onNavigateToProfile = { navController.navigate("profile_screen") },
                 onLogout = {
                     navController.navigate("home") {
                         popUpTo("home") { inclusive = true }
@@ -149,6 +151,18 @@ fun AppNavigation() {
                 onDarkModeChange = { isDarkMode = it },
                 onLanguageChange = { isSpanish = it },
                 nurseId = id,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable("profile_screen") {
+            ProfileScreen(
+                viewModel = nurseViewModel,
+                navController = navController,
+                isDarkMode = isDarkMode,
+                isSpanish = isSpanish,
+                onDarkModeChange = { isDarkMode = it },
+                onLanguageChange = { isSpanish = it },
                 onNavigateBack = { navController.popBackStack() }
             )
         }

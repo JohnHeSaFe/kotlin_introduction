@@ -28,6 +28,7 @@ fun DashboardScreenPreview() {
         onLanguageChange = {},
         onNavigateToSearch = {},
         onNavigateToShowAll = {},
+        onNavigateToProfile = {},
         onLogout = {}
     )
 }
@@ -40,6 +41,7 @@ fun DashboardScreen(
     onLanguageChange: (Boolean) -> Unit,
     onNavigateToSearch: () -> Unit,
     onNavigateToShowAll: () -> Unit,
+    onNavigateToProfile: () -> Unit,
     onLogout: () -> Unit
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
@@ -50,6 +52,7 @@ fun DashboardScreen(
     val tertiaryColor = colorResource(if (isDarkMode) R.color.tertiary else R.color.tertiary_night)
 
     // Textos según idioma
+    val profileBtn = if (isSpanish) "Mi Perfil" else "My Profile"
     val title = stringResource(if (isSpanish) R.string.dashboard_title_es else R.string.dashboard_title_en)
     val subtitle = stringResource(if (isSpanish) R.string.dashboard_subtitle_es else R.string.dashboard_subtitle_en)
     val searchBtn = stringResource(if (isSpanish) R.string.btn_search_es else R.string.btn_search_en)
@@ -193,6 +196,24 @@ fun DashboardScreen(
             ) {
                 Text(
                     text = showAllBtn,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            Button(
+                onClick = onNavigateToProfile,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(55.dp),
+                shape = RoundedCornerShape(50),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = primaryColor,
+                    contentColor = secondaryColor
+                )
+            ) {
+                Text(
+                    text = profileBtn,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )

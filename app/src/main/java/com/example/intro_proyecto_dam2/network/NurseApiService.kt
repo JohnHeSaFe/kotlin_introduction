@@ -7,7 +7,7 @@ import retrofit2.http.*
 interface NurseApiService {
     // Login
     @POST("nurse/login")
-    suspend fun login(@Body credentials: Map<String, String>): Response<Map<String, Boolean>>
+    suspend fun login(@Body credentials: Map<String, String>): Response<Map<String, Any>>
 
     // Register
     @POST("nurse/register")

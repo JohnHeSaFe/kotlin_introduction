@@ -268,14 +268,17 @@ fun LoginScreen(
                     if (email.isEmpty() || password.isEmpty()) {
                         errorMessage = errorEmpty
                     } else {
-                        scope.launch {
-                            if (viewModel.login(email, password)) {
+                        viewModel.login(
+                            email = email,
+                            pass = password,
+                            onSuccess = {
                                 errorMessage = ""
                                 onNavigateToDashboard()
-                            } else {
+                            },
+                            onError = {
                                 errorMessage = if (isSpanish) "Credenciales incorrectas" else "Invalid credentials"
                             }
-                        }
+                        )
                     }
                 },
                 modifier = Modifier

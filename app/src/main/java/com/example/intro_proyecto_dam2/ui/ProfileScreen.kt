@@ -1,6 +1,8 @@
 package com.example.intro_proyecto_dam2.ui
 
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -30,6 +32,7 @@ import androidx.navigation.NavController
 import com.example.intro_proyecto_dam2.R
 import com.example.intro_proyecto_dam2.ui.viewmodels.NurseViewModel
 import com.example.intro_proyecto_dam2.utils.decodeBase64ToBitmap
+import com.example.intro_proyecto_dam2.utils.encodeUriToBase64
 
 @Composable
 fun ProfileScreen(
@@ -61,6 +64,29 @@ fun ProfileScreen(
     )
 
     var menuExpanded by remember { mutableStateOf(false) }
+    var isPhotoBusy by remember { mutableStateOf(false) }
+
+    val imagePickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        if (uri != null) {
+            val base64 = encodeUriToBase64(context, uri)
+            if (base64.isNullOrBlank()) {
+                Toast.makeText(context, if (isSpanish) "No se pudo leer la imagen" else "Could not read image", Toast.LENGTH_SHORT).show()
+            } else {
+                isPhotoBusy = true
+                viewModel.updateProfilePicture(
+                    base64Image = base64,
+                    onSuccess = {
+                        isPhotoBusy = false
+                        Toast.makeText(context, if (isSpanish) "Foto actualizada" else "Photo updated", Toast.LENGTH_SHORT).show()
+                    },
+                    onError = {
+                        isPhotoBusy = false
+                        Toast.makeText(context, if (isSpanish) "Error al subir la foto" else "Upload failed", Toast.LENGTH_SHORT).show()
+                    }
+                )
+            }
+        }
+    }
 
     // Redirección si no hay usuario
     if (user == null) {
@@ -68,17 +94,17 @@ fun ProfileScreen(
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text("No hay sesión activa", color = textColor)
                 Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = { navController.navigate("login_screen") }) { Text("Ir al Login") }
+                Button(onClick = { navController.navigate("login") }) { Text("Ir al Login") }
             }
         }
         return
     }
 
     // Estados del formulario
-    var firstName by remember { mutableStateOf(user.first_name) }
-    var lastName by remember { mutableStateOf(user.last_name) }
-    var email by remember { mutableStateOf(user.email) }
-    var password by remember { mutableStateOf(user.password) }
+    var firstName by remember(user.id) { mutableStateOf(user.first_name) }
+    var lastName by remember(user.id) { mutableStateOf(user.last_name) }
+    var email by remember(user.id) { mutableStateOf(user.email) }
+    var password by remember(user.id) { mutableStateOf(user.password) }
 
     Column(
         modifier = Modifier
@@ -180,6 +206,60 @@ fun ProfileScreen(
             )
         }
 
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Text(
+            text = if (isSpanish) "ID de usuario: ${user.id}" else "User ID: ${user.id}",
+            fontSize = 14.sp,
+            color = textColor
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        val uploadLabel = if (user.profile_picture == null) {
+            if (isSpanish) "Subir foto" else "Upload photo"
+        } else {
+            if (isSpanish) "Cambiar foto" else "Change photo"
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Button(
+                onClick = { imagePickerLauncher.launch("image/*") },
+                modifier = Modifier.weight(1f),
+                enabled = !isPhotoBusy
+            ) {
+                Text(uploadLabel)
+            }
+
+            OutlinedButton(
+                onClick = {
+                    isPhotoBusy = true
+                    viewModel.deleteProfilePicture(
+                        onSuccess = {
+                            isPhotoBusy = false
+                            Toast.makeText(context, if (isSpanish) "Foto eliminada" else "Photo removed", Toast.LENGTH_SHORT).show()
+                        },
+                        onError = {
+                            isPhotoBusy = false
+                            Toast.makeText(context, if (isSpanish) "Error al eliminar la foto" else "Delete failed", Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                },
+                modifier = Modifier.weight(1f),
+                enabled = user.profile_picture != null && !isPhotoBusy
+            ) {
+                Text(if (isSpanish) "Eliminar foto" else "Remove photo")
+            }
+        }
+
+        if (isPhotoBusy) {
+            Spacer(modifier = Modifier.height(12.dp))
+            CircularProgressIndicator()
+        }
+
         Spacer(modifier = Modifier.height(24.dp))
 
         // Campos de texto (Adaptados al tema oscuro si es necesario)
@@ -237,12 +317,14 @@ fun ProfileScreen(
                     email = email,
                     password = password
                 )
-                // CORRECTION: Use 'updateProfile' instead of 'updateNurse'
-                viewModel.updateProfile(updatedNurse,
-                    onSuccess = { Toast.makeText(context, if(isSpanish) "Actualizado" else "Updated", Toast.LENGTH_SHORT).show() }
-                    // Note: updateProfile in your ViewModel currently doesn't take an onError lambda,
-                    // so remove the onError parameter or update the ViewModel to accept it.
-                    // Based on your ViewModel code:
+                viewModel.updateProfile(
+                    updatedNurse,
+                    onSuccess = {
+                        Toast.makeText(context, if (isSpanish) "Actualizado" else "Updated", Toast.LENGTH_SHORT).show()
+                    },
+                    onError = {
+                        Toast.makeText(context, if (isSpanish) "Error al actualizar" else "Update failed", Toast.LENGTH_SHORT).show()
+                    }
                 )
             },
             modifier = Modifier.fillMaxWidth()
@@ -255,13 +337,17 @@ fun ProfileScreen(
         // Botón Borrar Cuenta / Delete Account Button
         Button(
             onClick = {
-                // CORRECTION: Use 'deleteAccount' instead of 'deleteNurse'
-                viewModel.deleteAccount {
-                    Toast.makeText(context, if(isSpanish) "Cuenta eliminada" else "Account deleted", Toast.LENGTH_SHORT).show()
-                    navController.navigate("login_screen") {
-                        popUpTo("login_screen") { inclusive = true }
+                viewModel.deleteAccount(
+                    onSuccess = {
+                        Toast.makeText(context, if (isSpanish) "Cuenta eliminada" else "Account deleted", Toast.LENGTH_SHORT).show()
+                        navController.navigate("login") {
+                            popUpTo("login") { inclusive = true }
+                        }
+                    },
+                    onError = {
+                        Toast.makeText(context, if (isSpanish) "Error al eliminar" else "Delete failed", Toast.LENGTH_SHORT).show()
                     }
-                }
+                )
             },
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
             modifier = Modifier.fillMaxWidth()
@@ -273,8 +359,8 @@ fun ProfileScreen(
 
         TextButton(onClick = {
             viewModel.logout()
-            navController.navigate("login_screen") {
-                popUpTo("login_screen") { inclusive = true }
+            navController.navigate("login") {
+                popUpTo("login") { inclusive = true }
             }
         }) {
             Text(if(isSpanish) "Cerrar Sesión" else "Log Out", color = textColor)

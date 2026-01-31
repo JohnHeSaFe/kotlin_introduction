@@ -103,6 +103,7 @@ fun AppNavigation() {
                 onNavigateToShowAll = { navController.navigate("show_all_nurses") },
                 onNavigateToProfile = { navController.navigate("profile_screen") },
                 onLogout = {
+                    nurseViewModel.logout()
                     navController.navigate("home") {
                         popUpTo("home") { inclusive = true }
                     }

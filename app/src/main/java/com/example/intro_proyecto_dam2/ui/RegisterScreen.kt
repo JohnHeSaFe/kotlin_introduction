@@ -29,7 +29,6 @@ import com.example.intro_proyecto_dam2.R
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.intro_proyecto_dam2.ui.viewmodels.NurseViewModel
 import com.example.intro_proyecto_dam2.Nurse
-import kotlin.random.Random
 
 @Preview(showBackground = true)
 @Composable
@@ -67,6 +66,7 @@ fun RegisterScreen(
     var errorMessage by remember { mutableStateOf("") }
     var successMessage by remember { mutableStateOf("") }
     var menuExpanded by remember { mutableStateOf(false) }
+    var isSubmitting by remember { mutableStateOf(false) }
 
     val scrollState = rememberScrollState()
 
@@ -337,8 +337,19 @@ fun RegisterScreen(
                             successMessage = ""
                         }
                         else -> {
+                            val nurseId = numColegiado.toIntOrNull()
+                            if (nurseId == null || nurseId <= 0) {
+                                errorMessage = if (isSpanish) {
+                                    "Número de colegiado inválido"
+                                } else {
+                                    "Invalid license number"
+                                }
+                                successMessage = ""
+                                return@Button
+                            }
+
                             val newNurse = Nurse(
-                                id = viewModel.generateNextId(),
+                                id = nurseId,
                                 first_name = nombre,
                                 last_name = "",
                                 email = email,
@@ -346,16 +357,29 @@ fun RegisterScreen(
                                 profile_picture = null
                             )
 
-                            val registerSuccess = viewModel.register(newNurse)
-
-                            if (registerSuccess) {
-                                errorMessage = ""
-                                successMessage = success
-
-                            } else {
-                                errorMessage = if (isSpanish) "El email ya existe" else "Email already exists"
-                                successMessage = ""
-                            }
+                            isSubmitting = true
+                            viewModel.register(
+                                nurse = newNurse,
+                                onSuccess = {
+                                    isSubmitting = false
+                                    errorMessage = ""
+                                    successMessage = success
+                                },
+                                onError = { error ->
+                                    isSubmitting = false
+                                    successMessage = ""
+                                    errorMessage = when (error) {
+                                        NurseViewModel.RegisterError.EMAIL_EXISTS ->
+                                            if (isSpanish) "El email ya existe" else "Email already exists"
+                                        NurseViewModel.RegisterError.INVALID_RESPONSE ->
+                                            if (isSpanish) "Respuesta inválida del servidor" else "Invalid server response"
+                                        NurseViewModel.RegisterError.NETWORK_ERROR ->
+                                            if (isSpanish) "Error de conexión" else "Network error"
+                                        NurseViewModel.RegisterError.SERVER_ERROR ->
+                                            if (isSpanish) "No se pudo registrar" else "Registration failed"
+                                    }
+                                }
+                            )
                         }
                     }
                 },
@@ -366,7 +390,8 @@ fun RegisterScreen(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = primaryColor,
                     contentColor = secondaryColor
-                )
+                ),
+                enabled = !isSubmitting
             ) {
                 Text(text = submitBtn, fontSize = 18.sp, fontWeight = FontWeight.Bold)
             }

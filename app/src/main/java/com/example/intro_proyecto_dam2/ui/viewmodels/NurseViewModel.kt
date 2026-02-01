@@ -50,8 +50,9 @@ class NurseViewModel : ViewModel() {
 
             try {
                 val response = RetrofitInstance.api.getAllNurses()
+                _allNurses.clear()
                 _allNurses.addAll(response)
-                _nurseList.value = response
+                _nurseList.value = _allNurses.toList()
                 onSearchTextChange(_searchText.value)
             } catch (e: Exception) {
                 println("Error: ${e.message}")

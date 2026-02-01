@@ -1,5 +1,6 @@
 package com.example.intro_proyecto_dam2.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -55,6 +57,8 @@ fun RegisterScreen(
     onNavigateBack: () -> Unit,
     onNavigateToDashboard: () -> Unit
 ) {
+    val context = LocalContext.current
+
     // Estados del formulario
     var nombre by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -361,23 +365,11 @@ fun RegisterScreen(
                             viewModel.register(
                                 nurse = newNurse,
                                 onSuccess = {
-                                    isSubmitting = false
-                                    errorMessage = ""
-                                    successMessage = success
+                                    Toast.makeText(context, "Registrado correctamente", Toast.LENGTH_SHORT).show()
+                                    onNavigateToLogin() // Vuelve al login
                                 },
-                                onError = { error ->
-                                    isSubmitting = false
-                                    successMessage = ""
-                                    errorMessage = when (error) {
-                                        NurseViewModel.RegisterError.EMAIL_EXISTS ->
-                                            if (isSpanish) "El email ya existe" else "Email already exists"
-                                        NurseViewModel.RegisterError.INVALID_RESPONSE ->
-                                            if (isSpanish) "Respuesta inválida del servidor" else "Invalid server response"
-                                        NurseViewModel.RegisterError.NETWORK_ERROR ->
-                                            if (isSpanish) "Error de conexión" else "Network error"
-                                        NurseViewModel.RegisterError.SERVER_ERROR ->
-                                            if (isSpanish) "No se pudo registrar" else "Registration failed"
-                                    }
+                                onError = {
+                                    errorMessage = "Error al registrar. El email podría estar duplicado."
                                 }
                             )
                         }

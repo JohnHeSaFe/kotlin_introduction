@@ -30,6 +30,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.intro_proyecto_dam2.ui.viewmodels.NurseViewModel
 import androidx.compose.ui.graphics.asImageBitmap
 import com.example.intro_proyecto_dam2.utils.decodeBase64ToBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import com.example.intro_proyecto_dam2.utils.decodeBase64ToBitmap
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

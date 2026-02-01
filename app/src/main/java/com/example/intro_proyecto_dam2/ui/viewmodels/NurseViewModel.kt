@@ -65,44 +65,35 @@ class NurseViewModel : ViewModel() {
     }
 
     // Register and login methods
-    fun register(nurse: Nurse, onSuccess: () -> Unit, onError: (RegisterError) -> Unit) {
-        if (_allNurses.any { it.email.equals(nurse.email, ignoreCase = true) }) {
-            onError(RegisterError.EMAIL_EXISTS)
-            return
-        }
-
+    fun register(nurse: Nurse, onSuccess: () -> Unit, onError: () -> Unit) {
         viewModelScope.launch {
             try {
-                val payload = mutableMapOf(
-                    "email" to nurse.email,
-                    "password" to nurse.password,
+                // Creamos el mapa de datos que espera el Backend
+                // Si falla la foto, prueba a enviar null de momento o asegúrate que el backend acepte String.
+                val nurseData = hashMapOf(
                     "first_name" to nurse.first_name,
-                    "last_name" to nurse.last_name
+                    "last_name" to nurse.last_name,
+                    "email" to nurse.email,
+                    "password" to nurse.password
                 )
-                if (nurse.id > 0) {
-                    payload["nurse_id"] = nurse.id.toString()
+
+                // Si tiene foto, se añade
+                if (nurse.profile_picture != null) {
+                    nurseData["profile_picture"] = nurse.profile_picture
                 }
 
-                val response = RetrofitInstance.api.register(payload)
-                val body = response.body()
+                val response = RetrofitInstance.api.register(nurseData)
+
                 if (response.isSuccessful) {
-                    val created = buildNurseFromApi(body, nurse)
-                    if (created.id != 0) {
-                        currentUser = created
-                        updateLocalCache(created)
-                        onSuccess()
-                    } else {
-                        onError(RegisterError.INVALID_RESPONSE)
-                    }
+                    // Recargar la lista de enfermeros para que salga el nuevo
+                    fetchNurses()
+                    onSuccess()
                 } else {
-                    if (response.code() == 409) {
-                        onError(RegisterError.EMAIL_EXISTS)
-                    } else {
-                        onError(RegisterError.SERVER_ERROR)
-                    }
+                    onError()
                 }
             } catch (e: Exception) {
-                onError(RegisterError.NETWORK_ERROR)
+                e.printStackTrace()
+                onError()
             }
         }
     }

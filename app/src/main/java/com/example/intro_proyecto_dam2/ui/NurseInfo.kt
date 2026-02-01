@@ -1,4 +1,4 @@
-package com.example.intro_proyecto_dam2.ui // Asegúrate de que el paquete sea correcto
+package com.example.intro_proyecto_dam2.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,19 +11,19 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.intro_proyecto_dam2.R
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.intro_proyecto_dam2.R
 import com.example.intro_proyecto_dam2.ui.viewmodels.NurseViewModel
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.graphics.asImageBitmap
 import com.example.intro_proyecto_dam2.utils.decodeBase64ToBitmap
 
 @Composable
@@ -37,10 +37,11 @@ fun NurseDetailScreen(
     onLanguageChange: (Boolean) -> Unit
 ) {
     val nurseList by viewModel.nurseList.collectAsState()
-
     val nurse = nurseList.find { it.id == nurseId }
+
     var menuExpanded by remember { mutableStateOf(false) }
 
+    // Intentar decodificar solo si el enfermero existe y tiene foto
     val bitmap = remember(nurse?.profile_picture) {
         nurse?.profile_picture?.let { decodeBase64ToBitmap(it) }
     }
@@ -67,7 +68,7 @@ fun NurseDetailScreen(
             .background(currentBackgroundColor)
             .padding(16.dp)
     ) {
-        // --- CABECERA (Botón Atrás + Título + Configuración) ---
+        // --- CABECERA ---
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -76,7 +77,6 @@ fun NurseDetailScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                // Botón Atrás
                 IconButton(onClick = onNavigateBack) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -133,7 +133,7 @@ fun NurseDetailScreen(
             }
         }
 
-        // --- CONTENIDO (Tarjeta del Enfermero) ---
+        // --- CONTENIDO ---
         if (nurse == null) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(
@@ -146,7 +146,7 @@ fun NurseDetailScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .weight(1f), // Ocupa el espacio restante
+                    .weight(1f),
                 contentAlignment = Alignment.Center
             ) {
                 Card(
@@ -160,7 +160,7 @@ fun NurseDetailScreen(
                         modifier = Modifier.padding(32.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        // Imagen de Perfil
+                        // IMAGEN DE PERFIL (CORREGIDO)
                         if (bitmap != null) {
                             Image(
                                 bitmap = bitmap.asImageBitmap(),
@@ -172,7 +172,6 @@ fun NurseDetailScreen(
                                     .background(Color.Gray)
                             )
                         } else {
-                            // Icono por defecto si no tiene foto
                             Icon(
                                 imageVector = Icons.Default.Person,
                                 contentDescription = null,
@@ -186,7 +185,6 @@ fun NurseDetailScreen(
 
                         Spacer(modifier = Modifier.height(24.dp))
 
-                        // Nombre
                         Text(
                             text = "${nurse.first_name} ${nurse.last_name}",
                             fontSize = 26.sp,
@@ -197,7 +195,6 @@ fun NurseDetailScreen(
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        // Detalles adicionales
                         HorizontalDivider(color = secondaryTextColor, thickness = 1.dp)
                         Spacer(modifier = Modifier.height(16.dp))
 
